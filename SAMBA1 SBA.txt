@@ -1,0 +1,103 @@
+# create user
+useradd -m testsba
+passwd testsba
+
+
+ssh testsba@kumb0007-srv.example38.lab
+
+SAMBA
+
+# install utility both client and server
+yum install -y samba samba-common samba-client
+
+#edit config file
+[root@kumb0007-srv foo]# gedit /etc/samba/smb.conf
+
+testparm
+
+smbclient -L 172.16.30.38
+
+#start the service
+systemctl start smb nmb
+systemctl enable smb nmb
+
+#to show smb
+smbclient -L 172.16.30.38
+
+create password for user
+smbpasswd -a testsba
+
+#test the user
+smbclient //172.16.30.38/testsba -U testsba
+
+[root@kumb0007-srv foo]# cd /home
+[root@kumb0007-srv home]# mkdir samba
+[root@kumb0007-srv home]# chmod 777 /home/samba
+
+# Edit the samba config file amd edit workgroup
+gedit /etc/samba/smb.conf
+
+#edit just this under the following categories, if anything is not there, add it to the end
+
+[global]
+	workgroup = FOO
+	security = user
+
+	passdb backend = tdbsam
+
+	printing = cups
+	printcap name = cups
+	load printers = yes
+	cups options = raw
+	
+[public]
+	comment = Public Samba Share
+	path = /home/samba
+	public = yes
+	browsable = no
+	writable = no
+	printable = no
+		
+	
+# test that it is good
+[root@kumb0007-srv ~]# testparm
+# press enter again to see everything you created and added, you want to see this and others
+
+[public]
+	browseable = No
+	comment = Public Samba Share
+	guest ok = Yes
+	path = /home/samba
+	
+systemctl restart smb nmb
+
+#to see shares listed
+smbclient -L 172.16.30.38
+
+#On client, create a mount point
+[root@kumb0007-clt cst8246]# mkdir sambatest
+[root@kumb0007-clt cst8246]# cd /
+
+[root@kumb0007-clt /]# mount -t cifs //172.16.30.38/public /sambatest -o user=testsba,pass=011
+[root@kumb0007-clt /]# cd /sambatest/
+[root@kumb0007-clt sambatest]# gedit sbafile
+
+[root@kumb0007-srv home]# cd samba/
+[root@kumb0007-srv samba]# gedit readme.smb
+
+#optional you can umount on client
+umount sambatest
+
+
+
+
+
+
+
+
+
+
+
+
+
+
