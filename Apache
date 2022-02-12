@@ -1,0 +1,170 @@
+# Install httpd
+yum install httpd
+yum update httpd
+
+# Start  and enable httpd
+systemctl start httpd
+systemctl enable httpd
+systemctl status httpd -l
+
+
+//It is good to have a terminal to view the Apache error log file:
+tail -f /etc/httpd/logs/error_log -f
+
+
+# Configure Apache file
+ - Copy the original file:
+cp /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf.bak
+
+systemctl restart httpd
+
+# Do Syntax  check config
+apachectl configtest OR
+apachectl OR 
+httpd -t
+It should show you Syntax OK
+
+# edit the following 
+cd /etc/httpd/conf
+gedit httpd.conf
+ServerName kumb0007-srv.example38.lab:80
+ServerRoot "/etc/httpd"
+ 
+systemctl restart httpd
+httpd -t
+
+# Edit default index file:
+cd /var/www/html
+gedit index.html
+
+<head><Title>kumb0007-srv.example38.lab</Title></head> 
+<H1>Host:kumb0007-srv.example38.lab [172.16.30.38:80]</H1>
+
+# Download the web page.  
+wget kumb0007-srv.example38.lab 
+
+
+# Create dirctories for the websites, virtual host directory first,:
+mkdir /var/www/vhosts
+mkdir /var/www/vhosts/www.example38.lab
+mkdir /var/www/vhosts/www.example38.lab/html
+mkdir /var/www/vhosts/www.example38.lab/log
+
+
+
+mkdir /var/www/vhosts/www.site38.lab 
+mkdir /var/www/vhosts/www.site38.lab/html 
+mkdir /var/www/vhosts/www.site38.lab/log
+
+mkdir /var/www/vhosts/secure.example38.lab 
+mkdir /var/www/vhosts/secure.example38.lab/html 
+mkdir /var/www/vhosts/secure.example38.lab/log 
+
+# Create dirctories for security key and certificate with permissions
+mkdir /etc/httpd/tls 
+mkdir /etc/httpd/tls/key 
+mkdir /etc/httpd/tls/cert
+chmod 700 /etc/httpd/tls/key
+chmod 755 /etc/httpd/tls/cert
+
+
+# Change into the tls directory and create the certificate and private key (yum install openssl and yum install mod_ssl if not already installed) :
+openssl req -x509 -newkey rsa -days 120 -nodes -keyout key/example38.key -out cert/example38.cert
+
+# Permission to key and certificate owned by root:
+chmod 600 /etc/httpd/tls/key/example38.key
+chmod 644 /etc/httpd/tls/cert/example38.cert
+
+# view the certificate in /etc/httpd/tls/cert:
+openssl x509 -in example38.cert -noout -text
+
+
+# verify that the private key matches the certificate:
+openssl x509 -noout -modulus -in /etc/httpd/tls/cert/example38.cert | md5sum
+openssl rsa -noout -modulus -in /etc/httpd/tls/key/example38.key | md5sum
+
+# copy index web pages for the above websites:
+cp /var/www/html/index.html /var/www/vhosts/www.example38.lab/html
+cp /var/www/html/index.html /var/www/vhosts/secure.example38.lab/html
+cp /var/www/html/index.html /var/www/vhosts/www.site38.lab/html
+
+# Edit index page for every website:
+gedit /var/www/vhosts/www.example38.lab/html/index.html
+<head><Title>www.example38.lab</Title></head>
+<H1>Host:www.example38.lab [172.16.30.38:80]</H1>
+
+//Verify what you edited in index.html:
+curl www.example38.lab
+
+gedit /var/www/vhosts/www.site38.lab/html/index.html
+<head><Title>www.site38.lab</Title></head>
+<H1>Host:www.site38.lab [172.16.30.38:80]</H1>
+
+# Here we use the magic number
+gedit /var/www/vhosts/secure.example38.lab/html/index.html
+<head><Title>secure.example38.lab</Title></head> 
+<H1>Host:secure.example38.lab [172.16.32.38:443]</H1>
+
+
+//Edit /etc/httpd/conf.httpd.conf
+cd /etc/httpd/conf
+gedit httpd.conf
+
+Listen 80
+
+LoadModule	mpm_prefork_module	modules/mod_mpm_prefork.so
+LoadModule	unixd_module		modules/mod_unixd.so
+LoadModule	systemd_module 		modules/mod_systemd.so
+LoadModule	log_config_module 	modules/mod_log_config.so
+Transferlog	logs/access_log
+LoadModule	mime_module 		modules/mod_mime.so
+TypesConfig	/etc/mime.types
+LoadModule	authz_core_module 	modules/mod_authz_core.so
+LoadModule	dir_module 		modules/mod_dir.so
+Loadmodule	ssl_module 		modules/mod_ssl.so
+
+User apache
+Group apache
+
+ServerAdmin root@example38.lab
+
+<VirtualHost 172.16.30.38:80>
+	ServerName www.example38.lab
+	DocumentRoot /var/www/vhosts/www.example38.lab/html/
+	ErrorLog /var/www/vhosts/www.example38.lab/log/error.log
+</VirtualHost>
+
+<VirtualHost 172.16.30.38:80>     
+	ServerName www.site38.lab
+	DocumentRoot /var/www/vhosts/www.site38.lab/html/
+	ErrorLog /var/www/vhosts/www.site38.lab/log/error.log
+</VirtualHost>
+
+<VirtualHost 172.16.32.38:443>
+	ServerName secure.example38.lab
+	DocumentRoot /var/www/vhosts/secure.example38.lab/html/
+	SSLCertificateFile /etc/httpd/tls/cert/example38.cert
+	SSLCertificateKeyFile /etc/httpd/tls/key/example38.key
+	SSLEngine On
+</VirtualHost>
+
+
+systemctl restart httpd
+
+
+# Add the following names to /etc/hosts file on server only
+
+172.16.30.38 www.example38.lab
+172.16.30.38 www.site38.lab
+172.16.32.38 secure.example38.lab
+
+check alias interface if you have any
+verify you have the right IPs
+hostname -I
+
+Add the following to named.conf
+
+
+Create th
+
+
