@@ -1,0 +1,228 @@
+What is the Autodiscover service in Exchange 2019?
+A feature in exchange that if you set up a dns record and it points to your exchange server.  When you install a program like outlook it looks for this record and autoconfigures during installation.
+
+What is one of the biggest enemies of high availability?
+Service outages and downtime
+
+A DAG can contain a maximum of how many Exchange Server 2019 Mailbox Servers?
+Database availability group – 16 maximum
+
+What are Retention Policies?
+Keeps email backed up even if deleted by user
+
+What is an In‐place Hold?
+Prevents a user from deleting emails in case of investigation or audit
+
+What are some of the tasks you can do with Transport Rules?
+Attach disclaimers to outgoing messages automatically domain wide that cannot be removed
+
+What can I use Windows Deployment Services for?
+For installing windows network wide
+
+What is a feature that was removed in Exchange 2019?
+Faxing capabilities
+
+What is an Incremental Backup?
+It doesn’t backup everything.  It only backs up what changed since the last backup
+
+What is a Differential Backup?
+Backs up everything since the full backup (all incremental backups)
+
+What is VSS?
+Volume shadow copy service – allows backups while device is still in use
+
+Exchange requires access to Active Directory.
+
+
+What are the differences between Software RAID, BIOS RAID, and Hardware RAID?
+Software – raid controller runs in software
+BIOS – uses existing hardware/cpe/etc
+Hardware raid controller runs on raid card
+
+When using Get‐Mailbox, select the user Doug Dacey on the Server CST8342.
+
+
+Using Tab Completion, what would "Get‐Distri" produce?
+Get-DistributionGroup
+
+How would you set every mailbox on the Server "CST8342" to have its custom
+attribute 15 set to "Algonquin" using EMS?
+
+
+What EMS command would show DisplayName, ItemCount, StorageLimitStatus, and LastLogonTime for all MailBox objects of Server “CST8342”? Assume you are on
+server cst8342.
+
+
+How would you display only, DisplayName, ItemCount, and TotalItemSize for Doug Dacey?
+Get‐MailboxStatistics –Server CST8342 | Sort‐Object TotalItemSize ‐Descending | Select‐Object DisplayName, ItemCount, TotalItemSize | Export‐CSV C:\Reports\StorStats.csv
+
+Complete the following sentence. As an Azure customer, Azure Reservations offer discounted prices if you _________
+Paying for resources in advance for a cheaper rate
+
+Which of the following is a factor affecting costs?
+Energy costs, region, distance
+
+Which one of the following is used to determine Azure costs for each billing
+period?
+Usage Meters
+
+Which one of these is not a cost‐saving solution?
+
+
+Azure Cost Management allows you to _________.
+Gives ability to know what services you are spending your money on
+
+Azure Advisor provides recommendations for _________.
+Higher availability, costs, security, performance
+
+Which tab of the Azure pricing calculator will you use to put together your
+estimate?
+products
+
+Which of the following would be good to put a resource lock on?
+somthing that is critical like an express route
+
+Which of the following would be the most efficient way to ensure a naming
+convention was followed across your subscription?
+Custom attributes
+
+
+
+
+Which of the following might be a good usage of tags?
+To leaves comments for others to read
+Associate costs to different departments
+Schedule maintenance windows
+
+Which of the following is not a feature of resource groups?
+Nesting resource groups
+
+Where can you obtain details about the personal data Microsoft processes, how
+Microsoft processes it, and for what purposes?
+Privacy Statement
+
+Which of the following services provides up‐to‐date status information about the health of Azure services?
+Azure Service Health
+
+Which Azure service allows you to create, assign, and, manage policies to enforce different rules and effects over your resources and stay compliant with your corporate standards and service‐level agreements (SLAs)?
+Azure Policy
+
+Which Azure service allows you to configure fine‐grained access management for Azure resources, enabling you to grant users only the rights they need to perform their jobs?
+RBAC – Role Based Access Control
+
+You want to store certificates in Azure to centrally manage them for your
+services. Which Azure service should you use?
+Azure Key Vault
+
+There has been an attack on your public‐facing website, and the application's
+resources have been overwhelmed and exhausted, and are now unavailable to users.
+What service should you use to prevent this type of attack?
+Firewall
+
+Which of these is the strongest way to protect sensitive customer data?
+Encryption of stored data, encryption of trafficked data
+
+Which of these helps you most easily disable an account when an employee leaves your company?
+SSO – single sign on
+
+Cloud security is a shared responsibility between you and your cloud provider. Which category of cloud services requires the greatest security effort on your part?
+Infrastructure as a service
+
+How does Azure Traffic Manager reduce latency?
+Finds fastest way to point a to b
+
+What is network latency?
+The time from when you make a request to when you get your data
+
+Which is true about Azure Load Balancer?
+It shares access between multiple resources that have the same structure
+
+Which of the following is true about virtual networks?
+Virtually networks run virtually in software
+
+
+What is an Azure region?
+Different Azure datacenters in different geographical locations so you can put them close to your users or where they are cheapest
+
+A newly released mobile app using Azure data storage has just been mentioned by a celebrity on social media, seeing a huge spike in user volume. To meet the unexpected new user demand, what feature of pay‐as‐you‐go storage will be most beneficial?
+Being able to scale up/down resources when needed
+
+Which of the following situations would yield the most benefits from relocating an on‐premises data store to Azure?
+Your services and resources have big fluctuations in demand
+
+Suppose you work at a startup with limited funding. Why might you prefer Azure data storage over an on‐premises solution?  
+You can limit the amount of money you spend
+
+The compute options give you different levels of control over the configuration of the environment in which your application runs. Which of the following lists the compute options in order from "most control" to "least control"?   
+virtual machines (most), containers (less), serverless computing(least)
+
+
+Imagine that you work on a photo‐sharing application that runs on millions of
+mobile devices. Demand is unpredictable because you see a spike in usage whenever a locally or nationally significant event occurs. Which Azure compute resource is the best match for this workload?
+Multiple instances
+
+Suppose you have an existing application running locally on your own server. You need additional capacity but prefer to move to Azure instead of buying upgraded on‐premises hardware. Which compute option would likely give you the quickest route to getting your application running in Azure?
+Virtual machines
+
+Azure Advisor provides advice on which of these topics:
+
+
+An Azure dashboard is stored as which type of file?
+JASON
+
+Billing in Azure is ______________
+Subscription or usage
+
+Which of the following defines an Azure subscription correctly?
+Logical units based on what service
+
+Application availability refers to what?
+How much uptime an application has without doing down
+
+To use Azure datacenters that are made available with power, cooling, and
+networking capabilities independent from other datacenters in a region, choose a region that supports _________?
+Availability zones
+
+Deploying an app can be done directly to what level of physical granularity?
+What region
+
+When should you scale out your deployment? 
+When you're using excess capacity that you don't need.
+When you need capacity that you don’t have
+
+What does Remote Desktop Services allow you to do?
+Allows you to take control of a remote virtual machine or desktop
+
+You're developing an application and want to focus on building, testing, and
+deploying. You don't want to worry about managing the underlying hardware or
+software. Which cloud service type is best for you?
+Platform as a Service
+
+Suppose you have two types of applications: legacy applications that require
+specialized mainframe hardware and newer applications that can run on commodity hardware. Which cloud deployment model would be best for you?
+Hybrid Cloud Solution
+
+Which term from the list below would be viewed as benefits of using cloud
+services?
+Elasticity (scale out/in)
+
+True or false: Azure has money‐saving options for test and development servers.
+true
+
+True or false: If you already have Windows Server licenses, you have to pay for them again on Azure.
+false
+
+True or false: PaaS is generally less expensive than IaaS.
+true
+
+True or false: You can share your estimate through an Excel spreadsheet or through a URL.
+true
+
+Tags applied at a resource group level are propagated to resources within the
+resource group. Tags can be applied to any type of resource on Azure
+tags do no propagate down
+
+True or false: You can download published audit reports and other
+compliance‐related information related to Microsoft's cloud service from the
+Service Trust Portal
+true
