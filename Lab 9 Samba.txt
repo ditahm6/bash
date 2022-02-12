@@ -1,0 +1,160 @@
+##ON SERVER SECTION
+#SE linux is disabled
+sestatus
+
+#firewall is disabled
+systemctl	status firewalld
+
+install Samba packages
+yum install -y samba samba-common samba-client
+
+smbpasswd -a cst8246
+smbclient //172.16.30.38/cst8246 -U cst8246
+[root@kumb0007-srv home]# mkdir samba
+[root@kumb0007-srv home]# chmod 777 /home/samba
+gedit /etc/samba/smb.conf
+
+# create two folders, for samba share, public and private
+[root@kumb0007-srv ~]# mkdir public private
+
+
+# Give the directories full permission
+[root@kumb0007-srv ~]# chmod 777 /public/
+[root@kumb0007-srv ~]# chmod 777 /private/
+
+
+# Edit the samba config file amd edit workgroup
+gedit /etc/samba/smb.conf
+
+#edit just this under the following categories, if anything is not there, add it to the end
+
+[global]
+	workgroup = cst8246
+	security = user
+
+	passdb backend = tdbsam
+	
+	comment = Public Samba Share
+	path = /public
+	public = yes
+	browsable = yes
+	writable = yes
+
+[samba-private]
+	comment = Private Samba Share
+	path = /private
+	public = no
+	valid users = user1 user2
+	write list = user1
+	
+# test that it is good
+[root@kumb0007-srv ~]# testparm
+# press enter again to see everything you created and added
+
+# Create Samba users and passwords, note its smbpasswd -a 
+[root@kumb0007-srv ~]# useradd user1
+[root@kumb0007-srv ~]# useradd user2
+[root@kumb0007-srv ~]# smbpasswd -a user1
+New SMB password:
+Retype new SMB password:
+Added user user1.
+[root@kumb0007-srv ~]# smbpasswd -a user2
+New SMB password:
+Retype new SMB password:
+Added user user2.
+[root@kumb0007-srv ~]# 
+
+
+# start, restart and enable samba service
+[root@kumb0007-srv ~]# systemctl start smb nmb
+[root@kumb0007-srv ~]# systemctl enable smb nmb
+systemctl restart smb nmb
+systemctl status smb nmb
+
+
+[private]
+	comment = Pricate Samba Share
+	path = /private
+	public = no
+	valid users = user1 user2
+	write list = user1
+	
+	
+### ON CLIENT SECTION
+
+# install samba client packages
+yum install -y samba-client cifs-utils
+
+# Get the share directory from the server, hit enter when asked for the password. if all goes well, you should see 	CST8246 YOUR SERVERNAME at the last line
+
+[root@kumb0007-clt cst8246]# smbclient -L 172.16.30.38
+
+
+
+
+
+
+# now we mount samba,
+mount -o guest //172.16.30.38/samba-public /mnt
+
+df -h = shows directories that have just been mounted
+mount = shows all directories that have ever been mounted
+
+#we umount the guess
+[root@kumb0007-clt /]# umount /mnt
+
+# mount user1
+mount -o username=user1 //172.16.30.38/samba-public /mnt
+
+#to check status of the mount
+smbstatus
+
+
+## ON CLINE
+[root@kumb0007-clt /]# mount -t cifs //172.16.30.38/public /sambatest -o user=cst8246,pass=cst8246
+
+
+yum -y install nfs-utils
+[root@kumb0007-srv /]# mkdir /srv/nfs
+[root@kumb0007-srv /]# mkdir /srv/nfs/restricted
+[root@kumb0007-srv /]# mkdir /srv/nfs/shared
+[root@kumb0007-srv /]# chmod -R 755 /srv/nfs/
+[root@kumb0007-srv /]# chmod -R 777 /srv/nfs/restricted/
+[root@kumb0007-srv /]# chmod -R 777 /srv/nfs/shared/
+[root@kumb0007-srv /]# touch /srv/nfs/restricted/testfile.txt
+[root@kumb0007-srv /]# gedit /srv/nfs/restricted/testfile.txt
+[root@kumb0007-srv /]# gedit /etc/exports
+/srv/nfs/shared			172.16.31.38(rw)
+/srv/nfs/restricted		172.16.31.38(ro)
+
+systemctl restart nfs
+
+[root@kumb0007-clt /]# mkdir /nfstest
+[root@kumb0007-clt /]# mount -t nfs 172.16.30.38:/srv/nfs/shared /nfstest
+[root@kumb0007-clt /]# cd nfstest/
+[root@kumb0007-clt nfstest]# ll
+total 0
+[root@kumb0007-clt nfstest]# gedit anothertest
+[root@kumb0007-srv /]# cd /srv/nfs/
+[root@kumb0007-srv nfs]# ll
+total 0
+drwxrwxrwx 2 root root 26 Dec  2 12:15 restricted
+drwxrwxrwx 2 root root 25 Dec  2 12:22 shared
+[root@kumb0007-srv nfs]# cd shared/
+[root@kumb0007-srv shared]# ;;
+bash: syntax error near unexpected token `;;'
+[root@kumb0007-srv shared]# ll
+
+total 4
+-rw-r--r-- 1 nfsnobody nfsnobody 5 Dec  2 12:22 anothertest
+[root@kumb0007-srv shared]# 
+
+[root@kumb0007-clt nfstest]# cd
+[root@kumb0007-clt ~]# umount /nfstest 
+[root@kumb0007-clt ~]# ll
+
+
+
+
+
+
